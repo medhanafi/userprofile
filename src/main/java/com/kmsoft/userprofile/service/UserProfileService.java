@@ -16,7 +16,7 @@ public class UserProfileService {
 	@Autowired
 	private UserProfileParser parser;
 
-	public static String URL = "https://randomuser.me/api/?nat=fr";
+	public static String URL = "https://randomuser.me/api/";
 
 	@Autowired
 	private UserRepository userRepository;

@@ -21,7 +21,7 @@ public class UserProfileService {
 	@Autowired
 	private UserRepository userRepository;
 
-	@Scheduled(cron = "0/2 * * * * ?")
+	@Scheduled(cron = "0/1 * * * * ?")
 	public void process() {
 		User user = new User();
 		try {

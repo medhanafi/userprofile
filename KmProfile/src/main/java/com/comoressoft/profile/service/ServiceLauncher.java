@@ -1,11 +1,11 @@
 package com.comoressoft.profile.service;
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -66,10 +66,13 @@ public class ServiceLauncher {
 			km.setCity(citie);
 			km.setEmail(email.toLowerCase());
 			km.setFirstname(firstname);
+			km.setName(name);
 			km.setGender(gender);
 			km.setLocation(cities.get(indexCities));
 
-			this.kmUserRepo.save(km);
+			if (!this.kmUserRepo.findOne(Example.of(km)).isPresent()) {
+				this.kmUserRepo.save(km);
+			}
 		}
 
 	}

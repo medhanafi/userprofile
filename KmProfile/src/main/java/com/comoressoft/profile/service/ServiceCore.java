@@ -2,7 +2,6 @@ package com.comoressoft.profile.service;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -12,7 +11,6 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
-import org.aspectj.weaver.StandardAnnotation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -52,7 +50,7 @@ public class ServiceCore {
 	}
 
 	public List<String> getEmails() throws IOException {
-		String fileName = "/home/mohamed/Bureau/domain.txt";
+		String fileName = this.getClass().getClassLoader().getResource("domain.txt").getPath();
 		List<String> emails = new ArrayList<>();
 		Path path = Paths.get(fileName);
 		try (BufferedReader reader = Files.newBufferedReader(path)) {
@@ -102,11 +100,12 @@ public class ServiceCore {
 	public String getBirth() {
 
 		GregorianCalendar gc = new GregorianCalendar();
-		int year = randBetween(1960, 2012);
+		int year = randBetween(1970, 2012);
 		gc.set(Calendar.YEAR, year);
 		int dayOfYear = randBetween(1, gc.getActualMaximum(Calendar.DAY_OF_YEAR));
 		gc.set(Calendar.DAY_OF_YEAR, dayOfYear);
-		return asString(gc.get(Calendar.DAY_OF_MONTH))+ "/" + asString((gc.get(Calendar.MONTH) + 1)) + "/" + gc.get(Calendar.YEAR);
+		return asString(gc.get(Calendar.DAY_OF_MONTH)) + "/" + asString((gc.get(Calendar.MONTH) + 1)) + "/"
+				+ gc.get(Calendar.YEAR);
 
 	}
 

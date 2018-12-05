@@ -1,9 +1,12 @@
 package com.comoressoft.profile.utils;
 
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferByte;
+import java.awt.image.WritableRaster;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -45,7 +48,6 @@ import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
 
 /**
  * 
@@ -249,6 +251,16 @@ public final class ConnectionUtils {
 		return null;
 	}
 
+	public static byte[] getImagesFromUri(File imgPath) throws IOException {
+		BufferedImage bufferedImage = ImageIO.read(imgPath);
+		// get DataBufferBytes from Raster
+		WritableRaster raster = bufferedImage.getRaster();
+		DataBufferByte data = (DataBufferByte) raster.getDataBuffer();
+
+		return (data.getData());
+
+	}
+
 	public static String getContent(String url) throws Exception {
 		StringBuffer result = new StringBuffer();
 		BufferedReader rd = null;
@@ -278,6 +290,7 @@ public final class ConnectionUtils {
 		}
 
 	}
+
 	public static CloseableHttpResponse getConnection(String url) throws Exception {
 		CloseableHttpClient httpclient = HttpClients.createDefault();
 		HttpGet httpget = new HttpGet(url);
@@ -310,7 +323,7 @@ public final class ConnectionUtils {
 		return result;
 	}
 
-	public  Pair<Document, StatusLine> getDataFromUrl(String url) throws Exception {
+	public Pair<Document, StatusLine> getDataFromUrl(String url) throws Exception {
 		Document content = null;
 		CloseableHttpResponse response = null;
 		try {
@@ -335,7 +348,7 @@ public final class ConnectionUtils {
 		return Pair.of(content, response.getStatusLine());
 	}
 
-	public  Pair<MutableTriple<Document, Integer, String>, Triple<String, String, Integer>> getDataFromUrl(
+	public Pair<MutableTriple<Document, Integer, String>, Triple<String, String, Integer>> getDataFromUrl(
 			String urlDetail, Triple<String, String, Integer> proxy) throws Exception {
 		Document content = null;
 		String contentString = "";
@@ -395,7 +408,6 @@ public final class ConnectionUtils {
 
 	}
 
-	
 	private static boolean isGooglePlay(String urlDetail) {
 		if (urlDetail.contains("google")) {
 			return true;
@@ -454,7 +466,7 @@ public final class ConnectionUtils {
 		return response.toString();
 	}
 
-	public  String getData(final String urlReview, int line, final Triple<String, String, Integer> proxy)
+	public String getData(final String urlReview, int line, final Triple<String, String, Integer> proxy)
 			throws Exception {
 		if (proxy != null) {
 			String host = proxy.getMiddle();

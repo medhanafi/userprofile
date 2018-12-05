@@ -17,6 +17,7 @@ public class KmUser {
 	private String birth;
 	private String cell;
 	private String city;
+	private byte[] picture;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	private UserLocation location;
@@ -169,6 +170,14 @@ public class KmUser {
 		return "KmUser [gender=" + gender + ", name=" + name + ", firstname=" + firstname + ", email=" + email
 				+ ", birth=" + birth + ", cell=" + cell + ", city=" + city + ", location=" + location + ", id=" + id
 				+ "]";
+	}
+
+	public byte[] getPicture() {
+		return picture;
+	}
+
+	public void setPicture(byte[] picture) {
+		this.picture = picture;
 	}
 
 }

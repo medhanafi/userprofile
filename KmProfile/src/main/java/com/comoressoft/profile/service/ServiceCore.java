@@ -10,6 +10,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,12 @@ public class ServiceCore {
 	private List<Names> allFirstNames = new ArrayList<>();
 
 	private List<UserLocation> cities = new ArrayList<>();
+
+	private List<Path> femPictures;
+
+	private List<Path> homPictures;
+
+	private List<Path> allPictures;
 
 	public String getNextPhone() {
 
@@ -111,5 +118,36 @@ public class ServiceCore {
 
 	public static int randBetween(int start, int end) {
 		return start + (int) Math.round(Math.random() * (end - start));
+	}
+
+	public void initPictures() {
+		try {
+			this.allPictures = Files.walk(Paths.get("/home/mha14633/Bureau/picture")).filter(Files::isRegularFile)
+					.collect(Collectors.toList());
+			this.homPictures = new ArrayList<>();
+			this.femPictures = new ArrayList<>();
+
+			for (Path path : allPictures) {
+				if (path.getFileName().toString().contains("fem")) {
+					this.femPictures.add(path);
+				} else {
+					this.homPictures.add(path);
+				}
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * @return
+	 */
+	public List<Path> getPicture(String gender) {
+		if (gender != null && gender.contains("fem")) {
+			return this.femPictures;
+		} else {
+			return this.allPictures;
+		}
 	}
 }

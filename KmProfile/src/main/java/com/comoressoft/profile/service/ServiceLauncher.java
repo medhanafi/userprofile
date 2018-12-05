@@ -1,6 +1,7 @@
 package com.comoressoft.profile.service;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -13,6 +14,7 @@ import com.comoressoft.profile.model.KmUser;
 import com.comoressoft.profile.model.Names;
 import com.comoressoft.profile.model.UserLocation;
 import com.comoressoft.profile.repository.KmUserRepository;
+import com.comoressoft.profile.utils.ConnectionUtils;
 
 @Service
 public class ServiceLauncher {
@@ -33,6 +35,7 @@ public class ServiceLauncher {
 		for (int i = 0; i < 100; i++) {
 			this.phoneGerator.setCities();
 			this.phoneGerator.setNames();
+			this.phoneGerator.initPictures();
 			List<String> names = this.phoneGerator.getAllNames();
 			List<Names> firstNames = this.phoneGerator.getAllFirstNames();
 			List<String> emails = this.phoneGerator.getEmails();
@@ -44,12 +47,19 @@ public class ServiceLauncher {
 			int indexEmails = ThreadLocalRandom.current().nextInt(0, emails.size() - 1);
 
 			String gender = firstNames.get(indexFirstName).getGender();
+
+			List<Path> pictures = this.phoneGerator.getPicture(gender);
+
+			int indexPictures = ThreadLocalRandom.current().nextInt(0, pictures.size() - 1);
+
 			String name = names.get(indexName);
 			String firstname = firstNames.get(indexFirstName).getName();
 			String email = name + "." + firstname + "@" + emails.get(indexEmails);
 			String birth = this.phoneGerator.getBirth();
 			String cell = this.phoneGerator.getNextPhone();
 			String citie = cities.get(indexCities).getCity();
+
+			byte[] picture = ConnectionUtils.getImagesFromUri(pictures.get(indexPictures).toFile());
 
 			System.out.println("N° " + i + " <=======================>");
 			System.out.println("Genre: " + gender);
@@ -59,6 +69,7 @@ public class ServiceLauncher {
 			System.out.println("Email: " + email);
 			System.out.println("Téléphone: " + cell);
 			System.out.println("Adress :" + citie);
+			System.out.println("Picture :" + picture);
 
 			KmUser km = new KmUser();
 			km.setBirth(birth);
@@ -69,6 +80,7 @@ public class ServiceLauncher {
 			km.setName(name);
 			km.setGender(gender);
 			km.setLocation(cities.get(indexCities));
+			km.setPicture(picture);
 
 			if (!this.kmUserRepo.findOne(Example.of(km)).isPresent()) {
 				this.kmUserRepo.save(km);

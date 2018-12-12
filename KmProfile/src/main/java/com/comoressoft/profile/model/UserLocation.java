@@ -9,20 +9,25 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity(name = "user_location")
 public class UserLocation {
 
 	private String city;
 	private Double latitude;
 	private Double longitude;
-	
+
+	@JsonIgnore
 	@OneToMany(mappedBy = "location")
 	private Set<KmUser> users = new HashSet<>();
+
 	public UserLocation() {
 		super();
 	}
+
 	public UserLocation(String city, Double latitude, Double longitude) {
-		
+
 		this.city = city;
 		this.latitude = latitude;
 		this.longitude = longitude;
@@ -39,6 +44,7 @@ public class UserLocation {
 	public void setId(Long id) {
 		this.id = id;
 	}
+
 	public String getCity() {
 		return city;
 	}
@@ -47,7 +53,6 @@ public class UserLocation {
 		this.city = city;
 	}
 
-	
 	public Double getLatitude() {
 		return latitude;
 	}
@@ -64,10 +69,12 @@ public class UserLocation {
 		this.longitude = longitude;
 	}
 
+	@JsonIgnore
 	public Set<KmUser> getUsers() {
 		return users;
 	}
 
+	@JsonIgnore
 	public void setUsers(Set<KmUser> users) {
 		this.users = users;
 	}
@@ -120,12 +127,11 @@ public class UserLocation {
 			return false;
 		return true;
 	}
+
 	@Override
 	public String toString() {
 		return "UserLocation [city=" + city + ", latitude=" + latitude + ", longitude=" + longitude + ", users=" + users
 				+ ", id=" + id + "]";
 	}
-
-	
 
 }

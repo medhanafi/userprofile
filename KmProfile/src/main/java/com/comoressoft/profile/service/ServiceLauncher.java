@@ -7,13 +7,14 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.comoressoft.profile.model.KmUser;
 import com.comoressoft.profile.model.Names;
+import com.comoressoft.profile.model.Picture;
 import com.comoressoft.profile.model.UserLocation;
 import com.comoressoft.profile.repository.KmUserRepository;
+import com.comoressoft.profile.repository.PictureRepository;
 import com.comoressoft.profile.utils.ConnectionUtils;
 
 @Service
@@ -30,7 +31,10 @@ public class ServiceLauncher {
 	@Autowired
 	private KmUserRepository kmUserRepo;
 
-	@Scheduled(cron = "0/5 * * * * ?")
+	@Autowired
+	private PictureRepository pictureRepository;
+
+	// @Scheduled(cron = "0/5 * * * * ?")
 	public void profileGenerator() throws IOException {
 		for (int i = 0; i < 100; i++) {
 			this.phoneGerator.setCities();
@@ -48,9 +52,9 @@ public class ServiceLauncher {
 
 			String gender = firstNames.get(indexFirstName).getGender();
 
-			List<Path> pictures = this.phoneGerator.getPicture(gender);
+			List<Path> pathPictures = this.phoneGerator.getPicture(gender);
 
-			int indexPictures = ThreadLocalRandom.current().nextInt(0, pictures.size() - 1);
+			int indexPictures = ThreadLocalRandom.current().nextInt(0, pathPictures.size() - 1);
 
 			String name = names.get(indexName);
 			String firstname = firstNames.get(indexFirstName).getName();
@@ -59,7 +63,8 @@ public class ServiceLauncher {
 			String cell = this.phoneGerator.getNextPhone();
 			String citie = cities.get(indexCities).getCity();
 
-			byte[] picture = ConnectionUtils.getImagesFromUri(pictures.get(indexPictures).toFile());
+			byte[] pictureData = ConnectionUtils.getImagesFromUri(pathPictures.get(indexPictures).toFile());
+			String pictureName = pathPictures.get(indexPictures).getFileName().toString();
 
 			System.out.println("N° " + i + " <=======================>");
 			System.out.println("Genre: " + gender);
@@ -69,7 +74,7 @@ public class ServiceLauncher {
 			System.out.println("Email: " + email);
 			System.out.println("Téléphone: " + cell);
 			System.out.println("Adress :" + citie);
-			System.out.println("Picture :" + picture);
+			System.out.println("Picture :" + pictureData);
 
 			KmUser km = new KmUser();
 			km.setBirth(birth);
@@ -80,7 +85,11 @@ public class ServiceLauncher {
 			km.setName(name);
 			km.setGender(gender);
 			km.setLocation(cities.get(indexCities));
-			km.setPicture(picture);
+			Picture picture = new Picture();
+			picture.setFileName(pictureName);
+			picture.setPictureData(pictureData);
+
+			km.setPicture(pictureRepository.save(picture));
 
 			if (!this.kmUserRepo.findOne(Example.of(km)).isPresent()) {
 				this.kmUserRepo.save(km);

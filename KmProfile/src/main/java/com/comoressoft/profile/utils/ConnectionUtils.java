@@ -1,12 +1,11 @@
 package com.comoressoft.profile.utils;
 
 import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferByte;
-import java.awt.image.WritableRaster;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -22,6 +21,7 @@ import java.util.regex.Pattern;
 import javax.imageio.ImageIO;
 import javax.net.ssl.HttpsURLConnection;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.MutableTriple;
@@ -43,6 +43,9 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.imgscalr.Scalr;
+import org.imgscalr.Scalr.Method;
+import org.imgscalr.Scalr.Mode;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
@@ -252,13 +255,20 @@ public final class ConnectionUtils {
 	}
 
 	public static byte[] getImagesFromUri(File imgPath) throws IOException {
-		BufferedImage bufferedImage = ImageIO.read(imgPath);
-		// get DataBufferBytes from Raster
-		WritableRaster raster = bufferedImage.getRaster();
-		DataBufferByte data = (DataBufferByte) raster.getDataBuffer();
 
-		return (data.getData());
+		return IOUtils.toByteArray(new FileInputStream(imgPath));
+	}
 
+	@SuppressWarnings("unused")
+	private byte[] resizeImage(BufferedImage image, String format) throws IOException {
+
+//		 IOUtils.write(data, output);
+//		BufferedImage img = ImageIO.read(new FileInputStream(imgPath));
+
+		ByteArrayOutputStream bais = new ByteArrayOutputStream();
+		ImageIO.write(Scalr.resize(image, Method.QUALITY, Mode.FIT_TO_HEIGHT, 150, Scalr.OP_ANTIALIAS), format, bais);
+
+		return bais.toByteArray();
 	}
 
 	public static String getContent(String url) throws Exception {

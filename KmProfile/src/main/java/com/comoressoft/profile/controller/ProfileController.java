@@ -1,6 +1,7 @@
 package com.comoressoft.profile.controller;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
@@ -26,6 +27,13 @@ public class ProfileController {
 	List<KmUser> getProfile(HttpServletResponse response) throws IOException {
 		List<KmUser> users = this.kmUserRepo.findAll();
 		return users;
+	}
+
+	@GetMapping(value = "/fxdata")
+	List<String> getData(HttpServletResponse response) throws IOException {
+		return Arrays.asList("What Is JavaFX", "Get Started with JavaFX", "Get Acquainted with JavaFX Architecture",
+				"Deployment Guide", "Getting Started with JavaFX 3D Graphics", "Use the Image Ops API",
+				"Work with Canvas");
 	}
 
 }

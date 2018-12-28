@@ -48,6 +48,7 @@ public class GcmSender {
 			JSONObject jData = new JSONObject();
 			jData.put("message", "Salut message from java test notification");
 			jData.put("title", "Titre notification");
+			jData.put("idp", "2465");
 			// Where to send GCM message.
 			// if (args.length > 1 && args[1] != null) {
 			// jGcmData.put("to", args[1].trim());

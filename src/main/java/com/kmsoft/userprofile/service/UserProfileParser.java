@@ -6,9 +6,6 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.comoressoft.jdate.exceptions.JDException;
-import com.comoressoft.jdate.loader.JDBuilder;
-import com.comoressoft.jdate.loader.JDParser;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kmsoft.userprofile.model.Location;
@@ -16,6 +13,7 @@ import com.kmsoft.userprofile.model.Login;
 import com.kmsoft.userprofile.model.Picture;
 import com.kmsoft.userprofile.model.User;
 import com.kmsoft.userprofile.utils.DateParser;
+import com.kmsoft.userprofile.utils.JDException;
 
 @Service
 public final class UserProfileParser {
@@ -41,6 +39,7 @@ public final class UserProfileParser {
 
 	public User jsonParser(User user, String url) throws IOException, JDException {
 		JsonNode jsonNodeApp = connect.getDataFromUrl(url);
+		
 		if (jsonNodeApp != null) {
 			user.setGender(this.getValueAsText(jsonNodeApp, "gender"));
 			user.setTitle(this.getValueAsText(jsonNodeApp.get("name"), "title"));

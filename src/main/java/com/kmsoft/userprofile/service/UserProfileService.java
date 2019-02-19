@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import com.comoressoft.jdate.exceptions.JDException;
 import com.kmsoft.userprofile.model.User;
 import com.kmsoft.userprofile.repository.UserRepository;
+import com.kmsoft.userprofile.utils.JDException;
 
 @Service
 public class UserProfileService {

@@ -12,6 +12,10 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +23,7 @@ import com.comoressoft.profile.model.Names;
 import com.comoressoft.profile.model.UserLocation;
 import com.comoressoft.profile.repository.NamesRepository;
 import com.comoressoft.profile.repository.UserLocationRepository;
+import com.fasterxml.jackson.datatype.jsr310.DecimalUtils;
 
 @Service
 public class ServiceCore {
@@ -33,11 +38,11 @@ public class ServiceCore {
 
 	private List<UserLocation> cities = new ArrayList<>();
 
-	private List<Path> femPictures;
+	private List<String> femPictures;
 
-	private List<Path> homPictures;
+	private List<String> homPictures;
 
-	private List<Path> allPictures;
+	private List<String> allPictures;
 
 	public String getNextPhone() {
 
@@ -122,13 +127,14 @@ public class ServiceCore {
 
 	public void initPictures() {
 		try {
-			this.allPictures = Files.walk(Paths.get("/home/mha14633/Bureau/picture")).filter(Files::isRegularFile)
-					.collect(Collectors.toList());
+			this.allPictures = this.getPictureSources();
+					
+					
 			this.homPictures = new ArrayList<>();
 			this.femPictures = new ArrayList<>();
 
-			for (Path path : allPictures) {
-				if (path.getFileName().toString().contains("fem")) {
+			for (String path : allPictures) {
+				if (path.contains("fem")) {
 					this.femPictures.add(path);
 				} else {
 					this.homPictures.add(path);
@@ -140,10 +146,23 @@ public class ServiceCore {
 		}
 	}
 
+	private List<String> getPictureSources() throws IOException {
+		Document doc= Jsoup.connect("https://km.comoressoft.com/km/").get();
+		List<String> urls=new ArrayList<>();
+			Elements els=doc.getElementsByTag("li");
+			for(Element el:els) {
+				urls.add(el.text());
+			}
+		/*return Files.walk(Paths.get("/home/mha14633/Bureau/picture")).filter(Files::isRegularFile)
+				.collect(Collectors.toList());*/
+			return urls;
+	}
+
 	/**
 	 * @return
 	 */
-	public List<Path> getPicture(String gender) {
+	public List<String> getPicture(String gender) {
+		
 		if (gender != null && gender.contains("fem")) {
 			return this.femPictures;
 		} else {

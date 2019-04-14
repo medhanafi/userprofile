@@ -21,7 +21,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class Picture {
 
 	private String fileName;
-	private byte[] pictureData;
+
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "picture")
@@ -39,13 +39,7 @@ public class Picture {
 		this.fileName = fileName;
 	}
 
-	public byte[] getPictureData() {
-		return pictureData;
-	}
 
-	public void setPictureData(byte[] pictureData) {
-		this.pictureData = pictureData;
-	}
 
 	public Set<KmUser> getUsers() {
 		return users;

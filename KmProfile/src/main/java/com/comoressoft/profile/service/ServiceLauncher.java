@@ -7,6 +7,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.comoressoft.profile.model.KmUser;
@@ -52,7 +53,7 @@ public class ServiceLauncher {
 
 			String gender = firstNames.get(indexFirstName).getGender();
 
-			List<Path> pathPictures = this.phoneGerator.getPicture(gender);
+			List<String> pathPictures = this.phoneGerator.getPicture(gender);
 
 			int indexPictures = ThreadLocalRandom.current().nextInt(0, pathPictures.size() - 1);
 
@@ -63,8 +64,7 @@ public class ServiceLauncher {
 			String cell = this.phoneGerator.getNextPhone();
 			String citie = cities.get(indexCities).getCity();
 
-			byte[] pictureData = ConnectionUtils.getImagesFromUri(pathPictures.get(indexPictures).toFile());
-			String pictureName = pathPictures.get(indexPictures).getFileName().toString();
+			String pictureName = pathPictures.get(indexPictures);
 
 			System.out.println("N° " + i + " <=======================>");
 			System.out.println("Genre: " + gender);
@@ -74,7 +74,7 @@ public class ServiceLauncher {
 			System.out.println("Email: " + email);
 			System.out.println("Téléphone: " + cell);
 			System.out.println("Adress :" + citie);
-			System.out.println("Picture :" + pictureData);
+			System.out.println("Picture :" + pictureName);
 
 			KmUser km = new KmUser();
 			km.setBirth(birth);
@@ -87,7 +87,6 @@ public class ServiceLauncher {
 			km.setLocation(cities.get(indexCities));
 			Picture picture = new Picture();
 			picture.setFileName(pictureName);
-			picture.setPictureData(pictureData);
 
 			km.setPicture(pictureRepository.save(picture));
 
@@ -98,7 +97,7 @@ public class ServiceLauncher {
 
 	}
 
-	// @Scheduled(cron = "0/5 * * * * ?")
+//	 @Scheduled(cron = "0/5 * * * * ?")
 	public void launch() throws IOException {
 		String[] urls = { "http://www.geoguide.fr/region_villes_liste.aspx?CC1=CN&ADM=01&p=1",
 				"http://www.geoguide.fr/region_villes_liste.aspx?CC1=CN&ADM=01&p=2",
@@ -117,6 +116,7 @@ public class ServiceLauncher {
 			e.printStackTrace();
 		}
 		System.out.println("END");
+		this.profileGenerator();
 	}
 
 }

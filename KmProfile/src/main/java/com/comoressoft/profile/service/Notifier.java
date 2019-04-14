@@ -30,7 +30,7 @@ public class Notifier {
 
 	
 
-	@Scheduled(cron = "0/5 * * * * ?")
+	//@Scheduled(cron = "0/2 * * * * ?")
 	public void verifyAndSend() {
 		
 			if (this.sendNotification()) {
@@ -48,8 +48,8 @@ public class Notifier {
 					// send.
 					JSONObject jGcmData = new JSONObject();
 					JSONObject jData = new JSONObject();
-					jData.put("message", "Kozazidi mise à jour réussie");
-					jData.put("title", "Une mise à jour a été deployée");
+					jData.put("message", "La « Nuit du doute » aura lieu le samedi 4 mai 2019, nous vous tiendrons informer en temps réel");
+					jData.put("title", "Quand débute le mois de Ramadan 2019 ?");  
 					jData.put("idp", "12");
 					jGcmData.put("to", "/topics/global");
 					jGcmData.put("data", jData);

@@ -1,16 +1,14 @@
 package com.comoressoft.profile.service;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Collectors;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -23,7 +21,6 @@ import com.comoressoft.profile.model.Names;
 import com.comoressoft.profile.model.UserLocation;
 import com.comoressoft.profile.repository.NamesRepository;
 import com.comoressoft.profile.repository.UserLocationRepository;
-import com.fasterxml.jackson.datatype.jsr310.DecimalUtils;
 
 @Service
 public class ServiceCore {
@@ -64,8 +61,8 @@ public class ServiceCore {
 	public List<String> getEmails() throws IOException {
 		String fileName = this.getClass().getClassLoader().getResource("domain.txt").getPath();
 		List<String> emails = new ArrayList<>();
-		Path path = Paths.get(fileName);
-		try (BufferedReader reader = Files.newBufferedReader(path)) {
+		// Path path = Paths.get(fileName);
+		try (BufferedReader reader = new BufferedReader(new FileReader(new File(fileName)))) {
 			String line = null;
 			while ((line = reader.readLine()) != null) {
 				emails.add(line);
@@ -128,8 +125,7 @@ public class ServiceCore {
 	public void initPictures() {
 		try {
 			this.allPictures = this.getPictureSources();
-					
-					
+
 			this.homPictures = new ArrayList<>();
 			this.femPictures = new ArrayList<>();
 
@@ -147,22 +143,24 @@ public class ServiceCore {
 	}
 
 	private List<String> getPictureSources() throws IOException {
-		Document doc= Jsoup.connect("https://km.comoressoft.com/km/").get();
-		List<String> urls=new ArrayList<>();
-			Elements els=doc.getElementsByTag("li");
-			for(Element el:els) {
-				urls.add(el.text());
-			}
-		/*return Files.walk(Paths.get("/home/mha14633/Bureau/picture")).filter(Files::isRegularFile)
-				.collect(Collectors.toList());*/
-			return urls;
+		Document doc = Jsoup.connect("https://km.comoressoft.com/km/").get();
+		List<String> urls = new ArrayList<>();
+		Elements els = doc.getElementsByTag("li");
+		for (Element el : els) {
+			urls.add(el.text());
+		}
+		/*
+		 * return Files.walk(Paths.get("/home/mha14633/Bureau/picture")).filter(Files::
+		 * isRegularFile) .collect(Collectors.toList());
+		 */
+		return urls;
 	}
 
 	/**
 	 * @return
 	 */
 	public List<String> getPicture(String gender) {
-		
+
 		if (gender != null && gender.contains("fem")) {
 			return this.femPictures;
 		} else {

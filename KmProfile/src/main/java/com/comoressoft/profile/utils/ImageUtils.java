@@ -5,9 +5,12 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Base64;
 
 import javax.imageio.ImageIO;
+
+import org.apache.commons.lang3.StringUtils;
 
 public class ImageUtils {
 
@@ -53,4 +56,12 @@ public class ImageUtils {
         }
         return String.valueOf("error");
     }
+    
+    public static BufferedImage getImagesFromUrl(final String urlString) throws IOException {
+		if (StringUtils.isNotBlank(urlString)) {
+			final URL url = new URL(urlString);
+			return ImageIO.read(url);
+		}
+		return null;
+	}
 }

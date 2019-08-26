@@ -522,5 +522,17 @@ public final class ConnectionUtils {
 			return null;
 		}
 	}
+	
+	public static String getData() {
+		InputStream inputStream = ConnectionUtils.class
+				.getClassLoader().getResourceAsStream("m_data.html");
+		try {
+			return IOUtils.toString(inputStream,StandardCharsets.UTF_8);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return "";
+	}
 
 }

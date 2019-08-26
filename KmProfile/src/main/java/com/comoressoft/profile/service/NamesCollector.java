@@ -27,22 +27,29 @@ public class NamesCollector {
 		for (String param : urlParam) {
 			ImmutablePair<String, Integer> data = ConnectionUtils.getAvailableData(url + param);
 			Document rootDocument = Jsoup.parse(data.getLeft());
-			Element element = rootDocument.getElementsByAttributeValueMatching("class", "v_desktop col-md-12 col-lg-12")
-					.get(1);
+			if (param.equals("m")) {
+				rootDocument = Jsoup.parse(ConnectionUtils.getData());
+			}
+			Elements elements = rootDocument.getElementsByAttributeValueMatching("class",
+					"v_desktop col-md-12 col-lg-12");
+			for (Element element : elements) {
+				Elements fullNames = element.getElementsByClass("v_desktop");
+				if (fullNames != null) {
+					for (Element el : fullNames) {
+						if (el != null) {
+							Elements elNames = el.getElementsByTag("span");
+							String name = this.getValue(elNames, 0);
+							String gender = this.getValue(elNames, 1);
+							String pronounce = this.getValue(elNames, 2);
+							System.out.println(name + " => " + gender + " => " + pronounce);
+							this.namesRepository.save(new Names(gender, name, pronounce));
+						}
 
-			Elements fullNames = element.getElementsByClass("v_desktop");
-			if (fullNames != null) {
-				for (Element el : fullNames) {
-					if (el != null) {
-						Elements elNames = el.getElementsByTag("span");
-						String name = this.getValue(elNames, 0);
-						String gender = this.getValue(elNames, 1);
-						String pronounce = this.getValue(elNames, 2);
-						System.out.println(name + " => " + gender + " => " + pronounce);
-						this.namesRepository.save(new Names(gender, name, pronounce));
 					}
-
 				}
+			}
+			if (param.equals("m")) {
+				break;
 			}
 		}
 

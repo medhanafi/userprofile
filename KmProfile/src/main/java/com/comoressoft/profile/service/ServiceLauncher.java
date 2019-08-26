@@ -17,6 +17,7 @@ import com.comoressoft.profile.model.UserLocation;
 import com.comoressoft.profile.repository.KmUserRepository;
 import com.comoressoft.profile.repository.PictureRepository;
 import com.comoressoft.profile.utils.ConnectionUtils;
+import com.comoressoft.profile.utils.ImageUtils;
 
 @Service
 public class ServiceLauncher {
@@ -87,6 +88,7 @@ public class ServiceLauncher {
 			km.setLocation(cities.get(indexCities));
 			Picture picture = new Picture();
 			picture.setFileName(pictureName);
+			picture.setFileData(ImageUtils.encodeToString(ImageUtils.getImagesFromUrl(pictureName), "jpg"));
 
 			km.setPicture(pictureRepository.save(picture));
 
@@ -97,7 +99,7 @@ public class ServiceLauncher {
 
 	}
 
-//	 @Scheduled(cron = "0/5 * * * * ?")
+	// @Scheduled(cron = "0/5 * * * * ?")
 	public void launch() throws IOException {
 		String[] urls = { "http://www.geoguide.fr/region_villes_liste.aspx?CC1=CN&ADM=01&p=1",
 				"http://www.geoguide.fr/region_villes_liste.aspx?CC1=CN&ADM=01&p=2",

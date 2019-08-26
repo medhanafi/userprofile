@@ -16,6 +16,8 @@ import javax.persistence.OneToOne;
 public class Picture {
 
     private String fileName;
+    
+    private String fileData;
 
     @OneToOne(mappedBy = "picture")
     private KmUser user;
@@ -47,5 +49,13 @@ public class Picture {
     public void setId(Long id) {
         this.id = id;
     }
+
+	public String getFileData() {
+		return fileData;
+	}
+
+	public void setFileData(String fileData) {
+		this.fileData = fileData;
+	}
 
 }

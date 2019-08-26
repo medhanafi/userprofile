@@ -21,7 +21,7 @@ public class KmUser {
     private String cell;
     private String city;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "picture", referencedColumnName = "id")
     private Picture picture;
 

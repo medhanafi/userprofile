@@ -1,15 +1,10 @@
 package com.comoressoft.profile.model;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import javax.persistence.OneToOne;
 
 /**
  * @author mha14633
@@ -20,41 +15,37 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity(name = "picture")
 public class Picture {
 
-	private String fileName;
+    private String fileName;
 
+    @OneToOne(mappedBy = "picture")
+    private KmUser user;
 
-	@JsonIgnore
-	@OneToMany(mappedBy = "picture")
-	private Set<KmUser> users = new HashSet<>();
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private Long id;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE)
-	private Long id;
+    public String getFileName() {
+        return fileName;
+    }
 
-	public String getFileName() {
-		return fileName;
-	}
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
 
-	public void setFileName(String fileName) {
-		this.fileName = fileName;
-	}
+    public KmUser getUser() {
+        return this.user;
+    }
 
+    public void setUser(KmUser user) {
+        this.user = user;
+    }
 
+    public Long getId() {
+        return id;
+    }
 
-	public Set<KmUser> getUsers() {
-		return users;
-	}
-
-	public void setUsers(Set<KmUser> users) {
-		this.users = users;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
 }
